@@ -10,30 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1 — Checkout the repository
+      # Step 1 — Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2 — Use Node.js 20
-      - name: Set up Node.js
+      # Step 2 — Install Node.js 20
+      - name: Setup Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20.11.1'
+          node-version: '20'
 
-      # Step 3 — Install dependencies
+      # Step 3 — Confirm Node version
+      - name: Check Node version
+        run: node -v
+
+      # Step 4 — Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4 — Build Next.js
+      # Step 5 — Build Next.js
       - name: Build project
         run: npm run build
 
-      # Step 5 — Package for deployment
-      - name: Generate deployment package
+      # Step 6 — Package deployment
+      - name: Zip project
         run: zip -r deploy.zip . -x "*.git*"
 
-      # Step 6 — Deploy to Elastic Beanstalk
-      - name: Deploy to AWS Elastic Beanstalk
+      # Step 7 — Deploy to AWS EB
+      - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
